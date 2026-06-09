@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>รับคิว — GC Warehouse</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0f14;
+    color: #f0f4ff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .logo { font-size: 12px; color: #ffffff30; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; text-align: center; }
+
+  /* FORM CARD */
+  .card {
+    background: #1e2430;
+    border: 1px solid #2a3040;
+    border-radius: 20px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 420px;
+  }
+  .card-title { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+  .card-sub { font-size: 14px; color: #6b7a96; margin-bottom: 28px; line-height: 1.5; }
+
+  label { display: block; font-size: 13px; color: #6b7a96; margin-bottom: 8px; }
+  input[type=text] {
+    width: 100%;
+    background: #0d0f14;
+    border: 1px solid #2a3040;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #f0f4ff;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s;
+    margin-bottom: 20px;
+  }
+  input[type=text]:focus { border-color: #00c897; }
+  input[type=text]::placeholder { color: #3a4458; }
+
+  .btn-submit {
+    width: 100%;
+    background: #00c897;
+    color: #061a13;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+    letter-spacing: .3px;
+  }
+  .btn-submit:hover { background: #00e0a8; }
+  .btn-submit:active { transform: scale(.98); }
+  .btn-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+  /* TICKET */
+  .ticket {
+    display: none;
+    background: #1e2430;
+    border: 1px solid #2a3040;
+    border-radius: 20px;
+    padding: 40px 28px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+  }
+  .ticket-label { font-size: 13px; color: #6b7a96; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .ticket-num {
+    font-size: 96px;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #00c897, #4a9eff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 16px;
+  }
+  .ticket-name { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+  .ticket-time { font-size: 13px; color: #6b7a96; margin-bottom: 28px; }
+
+  .ticket-notice {
+    background: #00c89715;
+    border: 1px solid #00c89730;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #00c897;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .ticket-waiting {
+    font-size: 13px;
+    color: #6b7a96;
+    margin-bottom: 24px;
+  }
+  .ticket-waiting span { color: #4a9eff; font-weight: 600; }
+
+  .btn-new {
+    width: 100%;
+    background: transparent;
+    color: #6b7a96;
+    border: 1px solid #2a3040;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-new:hover { border-color: #3a4458; color: #f0f4ff; }
+
+  .loading { text-align: center; color: #6b7a96; font-size: 14px; }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #2a3040; border-top-color: #00c897; border-radius: 50%; animation: spin .7s linear infinite; margin-right: 8px; vertical-align: middle; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .conn-status { font-size: 12px; color: #6b7a96; margin-top: 20px; display: flex; align-items: center; gap: 6px; justify-content: center; }
+  .conn-dot { width: 6px; height: 6px; border-radius: 50%; background: #6b7a96; }
+  .conn-dot.online { background: #00c897; }
+</style>
+</head>
+<body>
+
+<div class="logo">GC Warehouse · Central Receive</div>
+
+<!-- FORM -->
+<div class="card" id="form-card">
+  <div class="card-title">รับบัตรคิว</div>
+  <div class="card-sub">กรอกชื่อบริษัทเพื่อรับเลขคิว<br>แล้วรอเรียกที่จอแสดงผล</div>
+  <label>ชื่อบริษัท / Vendor</label>
+  <input type="text" id="inp-company" placeholder="เช่น บริษัท ABC จำกัด" autocomplete="organization">
+  <button class="btn-submit" onclick="submitQueue()" id="btn-submit">รับคิว →</button>
+</div>
+
+<!-- TICKET -->
+<div class="ticket" id="ticket-card">
+  <div class="ticket-label">หมายเลขคิวของคุณ</div>
+  <div class="ticket-num" id="ticket-num">—</div>
+  <div class="ticket-name" id="ticket-name"></div>
+  <div class="ticket-time" id="ticket-time"></div>
+  <div class="ticket-notice">
+    📺 กรุณารอเรียกชื่อที่<br><strong>จอแสดงผลหน้า Warehouse</strong>
+  </div>
+  <div class="ticket-waiting" id="ticket-waiting"></div>
+  <button class="btn-new" onclick="resetForm()">← กลับหน้าหลัก</button>
+</div>
+
+<div class="conn-status">
+  <div class="conn-dot" id="cdot"></div>
+  <span id="clabel">กำลังเชื่อมต่อ...</span>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBmFkw8GAHAOQEHzDfaEKIVabs-4t_XhPE",
+  authDomain: "central-recevie-queue-mange.firebaseapp.com",
+  databaseURL: "https://central-recevie-queue-mange-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "central-recevie-queue-mange",
+  storageBucket: "central-recevie-queue-mange.firebasestorage.app",
+  messagingSenderId: "848748738188",
+  appId: "1:848748738188:web:76a0ab8ab6218b07b1ada9"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const todayKey = new Date().toISOString().split('T')[0];
+const counterRef = db.ref('counter/' + todayKey);
+const queueRef = db.ref('queue');
+
+db.ref('.info/connected').on('value', snap => {
+  const ok = snap.val();
+  document.getElementById('cdot').className = 'conn-dot ' + (ok ? 'online' : '');
+  document.getElementById('clabel').textContent = ok ? 'เชื่อมต่อแล้ว' : 'ไม่มีสัญญาณ...';
+});
+
+function submitQueue() {
+  const name = document.getElementById('inp-company').value.trim();
+  if (!name) { document.getElementById('inp-company').focus(); return; }
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>กำลังออกบัตรคิว...';
+
+  counterRef.transaction(cur => (cur || 0) + 1, (err, committed, snap) => {
+    if (err || !committed) {
+      btn.disabled = false;
+      btn.textContent = 'รับคิว →';
+      alert('เกิดข้อผิดพลาด กรุณาลองใหม่');
+      return;
+    }
+    const n = snap.val();
+    const num = 'A' + String(n).padStart(3, '0');
+    const id = 'q_' + Date.now();
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
+    const item = {
+      id, num, name,
+      type: '', gate: '',
+      addedBy: 'Vendor (QR)',
+      addedAt: Date.now(),
+      time: timeStr,
+      status: 'waiting'
+    };
+    queueRef.child(id).set(item, err2 => {
+      if (err2) {
+        btn.disabled = false;
+        btn.textContent = 'รับคิว →';
+        alert('เกิดข้อผิดพลาด กรุณาลองใหม่');
+        return;
+      }
+      showTicket(num, name, timeStr);
+      updateWaiting(n);
+    });
+  });
+}
+
+function showTicket(num, name, time) {
+  document.getElementById('form-card').style.display = 'none';
+  document.getElementById('ticket-card').style.display = 'block';
+  document.getElementById('ticket-num').textContent = num;
+  document.getElementById('ticket-name').textContent = name;
+  document.getElementById('ticket-time').textContent = 'เวลา ' + time + ' น.';
+}
+
+function updateWaiting(myPos) {
+  queueRef.orderByChild('status').equalTo('waiting').once('value', snap => {
+    const count = snap.numChildren();
+    const ahead = Math.max(0, count - 1);
+    const el = document.getElementById('ticket-waiting');
+    if (ahead === 0) {
+      el.innerHTML = 'คุณอยู่ <span>ถัดไป</span> ในคิว';
+    } else {
+      el.innerHTML = 'มีคิวรอก่อนหน้า <span>' + ahead + ' คัน</span>';
+    }
+  });
+}
+
+function resetForm() {
+  document.getElementById('form-card').style.display = 'block';
+  document.getElementById('ticket-card').style.display = 'none';
+  document.getElementById('inp-company').value = '';
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = false;
+  btn.textContent = 'รับคิว →';
+}
+
+document.getElementById('inp-company').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitQueue();
+});
+</script>
+</body>
+</html>
