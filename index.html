@@ -7,8 +7,8 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #0d0f14;
-    color: #f0f4ff;
+    background: #f0f4f8;
+    color: #1a2a40;
     font-family: 'Segoe UI', system-ui, sans-serif;
     min-height: 100vh;
     display: flex;
@@ -18,41 +18,53 @@
     padding: 24px;
   }
 
-  .logo { font-size: 12px; color: #ffffff30; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; text-align: center; }
+  .logo {
+    font-size: 12px;
+    color: #6b82a0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-dot { width: 6px; height: 6px; border-radius: 50%; background: #1a3a6b; }
 
   /* FORM CARD */
   .card {
-    background: #1e2430;
-    border: 1px solid #2a3040;
+    background: white;
+    border: 1px solid #d4e0f0;
     border-radius: 20px;
     padding: 32px 28px;
     width: 100%;
     max-width: 420px;
+    box-shadow: 0 4px 20px rgba(26,58,107,.10);
   }
-  .card-title { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
-  .card-sub { font-size: 14px; color: #6b7a96; margin-bottom: 28px; line-height: 1.5; }
+  .card-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; color: #1a3a6b; }
+  .card-sub { font-size: 14px; color: #6b82a0; margin-bottom: 28px; line-height: 1.6; }
 
-  label { display: block; font-size: 13px; color: #6b7a96; margin-bottom: 8px; }
+  label { display: block; font-size: 13px; color: #6b82a0; margin-bottom: 8px; font-weight: 500; }
   input[type=text] {
     width: 100%;
-    background: #0d0f14;
-    border: 1px solid #2a3040;
+    background: #f0f4f8;
+    border: 1.5px solid #d4e0f0;
     border-radius: 12px;
     padding: 14px 16px;
-    color: #f0f4ff;
+    color: #1a2a40;
     font-size: 16px;
     font-family: inherit;
     outline: none;
-    transition: border-color .2s;
+    transition: border-color .2s, background .2s;
     margin-bottom: 20px;
   }
-  input[type=text]:focus { border-color: #00c897; }
-  input[type=text]::placeholder { color: #3a4458; }
+  input[type=text]:focus { border-color: #2563b0; background: white; }
+  input[type=text]::placeholder { color: #b0bec5; }
 
   .btn-submit {
     width: 100%;
-    background: #00c897;
-    color: #061a13;
+    background: #1a3a6b;
+    color: white;
     border: none;
     border-radius: 12px;
     padding: 16px;
@@ -63,59 +75,88 @@
     transition: all .2s;
     letter-spacing: .3px;
   }
-  .btn-submit:hover { background: #00e0a8; }
+  .btn-submit:hover { background: #2563b0; }
   .btn-submit:active { transform: scale(.98); }
   .btn-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
   /* TICKET */
   .ticket {
     display: none;
-    background: #1e2430;
-    border: 1px solid #2a3040;
+    background: white;
+    border: 1px solid #d4e0f0;
     border-radius: 20px;
-    padding: 40px 28px;
+    padding: 36px 28px;
     width: 100%;
     max-width: 420px;
     text-align: center;
+    box-shadow: 0 4px 20px rgba(26,58,107,.10);
   }
-  .ticket-label { font-size: 13px; color: #6b7a96; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .ticket-label {
+    font-size: 12px;
+    color: #6b82a0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
   .ticket-num {
-    font-size: 96px;
+    font-size: 104px;
     font-weight: 900;
     line-height: 1;
-    background: linear-gradient(135deg, #00c897, #4a9eff);
+    background: linear-gradient(135deg, #1a3a6b, #2563b0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-variant-numeric: tabular-nums;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
-  .ticket-name { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
-  .ticket-time { font-size: 13px; color: #6b7a96; margin-bottom: 28px; }
+  .ticket-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; color: #1a2a40; }
+  .ticket-time { font-size: 13px; color: #6b82a0; margin-bottom: 22px; }
 
   .ticket-notice {
-    background: #00c89715;
-    border: 1px solid #00c89730;
+    background: #e8f0fb;
+    border: 1.5px solid #b8d0f0;
     border-radius: 12px;
     padding: 14px 18px;
     font-size: 14px;
-    color: #00c897;
+    color: #1a3a6b;
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  /* screenshot reminder */
+  .ticket-screenshot {
+    background: #fff7ed;
+    border: 1.5px solid #fdba74;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #9a3412;
     line-height: 1.6;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
+  .ticket-screenshot .ss-icon { font-size: 22px; flex-shrink: 0; }
 
   .ticket-waiting {
     font-size: 13px;
-    color: #6b7a96;
+    color: #6b82a0;
     margin-bottom: 24px;
+    background: #f0f4f8;
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: inline-block;
   }
-  .ticket-waiting span { color: #4a9eff; font-weight: 600; }
+  .ticket-waiting span { color: #2563b0; font-weight: 700; }
 
   .btn-new {
     width: 100%;
     background: transparent;
-    color: #6b7a96;
-    border: 1px solid #2a3040;
+    color: #6b82a0;
+    border: 1.5px solid #d4e0f0;
     border-radius: 12px;
     padding: 12px;
     font-size: 14px;
@@ -123,25 +164,25 @@
     font-family: inherit;
     transition: all .2s;
   }
-  .btn-new:hover { border-color: #3a4458; color: #f0f4ff; }
+  .btn-new:hover { border-color: #2563b0; color: #1a3a6b; }
 
-  .loading { text-align: center; color: #6b7a96; font-size: 14px; }
-  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #2a3040; border-top-color: #00c897; border-radius: 50%; animation: spin .7s linear infinite; margin-right: 8px; vertical-align: middle; }
+  .loading { text-align: center; color: #6b82a0; font-size: 14px; }
+  .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid #d4e0f0; border-top-color: #2563b0; border-radius: 50%; animation: spin .7s linear infinite; margin-right: 8px; vertical-align: middle; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .conn-status { font-size: 12px; color: #6b7a96; margin-top: 20px; display: flex; align-items: center; gap: 6px; justify-content: center; }
-  .conn-dot { width: 6px; height: 6px; border-radius: 50%; background: #6b7a96; }
-  .conn-dot.online { background: #00c897; }
+  .conn-status { font-size: 12px; color: #6b82a0; margin-top: 20px; display: flex; align-items: center; gap: 6px; justify-content: center; }
+  .conn-dot { width: 6px; height: 6px; border-radius: 50%; background: #b0bec5; }
+  .conn-dot.online { background: #16a34a; box-shadow: 0 0 5px #86efac; }
 </style>
 </head>
 <body>
 
-<div class="logo">GC Warehouse · Central Receive</div>
+<div class="logo"><div class="logo-dot"></div>GC Warehouse · Central Receive<div class="logo-dot"></div></div>
 
 <!-- FORM -->
 <div class="card" id="form-card">
-  <div class="card-title">รับบัตรคิว</div>
-  <div class="card-sub">กรอกชื่อบริษัทเพื่อรับเลขคิว<br>แล้วรอเรียกที่จอแสดงผล</div>
+  <div class="card-title">🎫 รับบัตรคิว</div>
+  <div class="card-sub">กรอกชื่อบริษัทเพื่อรับเลขคิว<br>แล้วรอเรียกที่จอแสดงผลหน้า Warehouse</div>
   <label>ชื่อบริษัท / Vendor</label>
   <input type="text" id="inp-company" placeholder="เช่น บริษัท ABC จำกัด" autocomplete="organization">
   <button class="btn-submit" onclick="submitQueue()" id="btn-submit">รับคิว →</button>
@@ -155,6 +196,10 @@
   <div class="ticket-time" id="ticket-time"></div>
   <div class="ticket-notice">
     📺 กรุณารอเรียกชื่อที่<br><strong>จอแสดงผลหน้า Warehouse</strong>
+  </div>
+  <div class="ticket-screenshot">
+    <span class="ss-icon">📸</span>
+    <span><strong>กรุณาแคปหน้าจอนี้ไว้เป็นหลักฐาน</strong><br>ก่อนออกจากหน้านี้</span>
   </div>
   <div class="ticket-waiting" id="ticket-waiting"></div>
   <button class="btn-new" onclick="resetForm()">← กลับหน้าหลัก</button>
@@ -206,7 +251,8 @@ function submitQueue() {
       return;
     }
     const n = snap.val();
-    const num = 'A' + String(n).padStart(3, '0');
+    // ใช้รูปแบบ 01, 02, ... เหมือน Staff interface
+    const num = String(n).padStart(2, '0');
     const id = 'q_' + Date.now();
     const now = new Date();
     const timeStr = now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
@@ -247,7 +293,7 @@ function updateWaiting(myPos) {
     if (ahead === 0) {
       el.innerHTML = 'คุณอยู่ <span>ถัดไป</span> ในคิว';
     } else {
-      el.innerHTML = 'มีคิวรอก่อนหน้า <span>' + ahead + ' คัน</span>';
+      el.innerHTML = 'มีคิวรอก่อนหน้า <span>' + ahead + ' คิว</span>';
     }
   });
 }
